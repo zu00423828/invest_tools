@@ -1,0 +1,4 @@
+    db_path : 'futures.db'
+    old_data_path : 'TransactionHistory.csv'
+    binance_api_key : ""
+    binance_api_secret : ""
