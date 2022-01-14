@@ -58,16 +58,18 @@ def timestamp2datetime(ts:datetime.timestamp):
 
 def get_binane_data():
     client = MyFutures(key=config['binance_api_key'], secret=config['binance_api_secret'],base_url="https://fapi.binance.com")
-    yesterday=datetime.now()-timedelta(days=1)
+    # yesterday=datetime.now()-timedelta(days=1)
     db_last_recode_datetime=dbtool.get_last_dat()[0][0]
     db_last_recode_datetime=datetime.strptime(db_last_recode_datetime,'%Y-%m-%d %H:%M:%S')
     print(type(db_last_recode_datetime),db_last_recode_datetime)
-    start_time=datetime(yesterday.year,yesterday.month,yesterday.day,0,0,0)
+    # start_time=datetime(yesterday.year,yesterday.month,yesterday.day,0,0,0)
+    start_time=db_last_recode_datetime+timedelta(seconds=1)
     ts_s=datetime2timestamp(start_time)
     # ts_e=datetime2timestamp(end_time)
     result = client.get_account_trades( startTime=ts_s,recvWindow=6000)
-    new_data=pd.DataFrame(result)
-    insert_data_to_db(new_data)
+    if len(result):
+        new_data=pd.DataFrame(result)
+        insert_data_to_db(new_data)
 
 if __name__=="__main__":
     with open('config.yaml') as f:
